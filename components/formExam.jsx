@@ -1,10 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const FormExam = () => {
   const [firstname, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [fullname, setFullname] = useState("");
+  const [result, setResult] = useState(null);
 
   const handleChange1 = (event) => {
     setName(event.target.value);
@@ -14,14 +15,30 @@ const FormExam = () => {
     setSurname(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // Prevent the form from reloading the page
     if (fullname === "") {
-      setFullname(firstname + " " + surname);
+      setFullname(`${firstname} ${surname}`);
     } else {
       setFullname("");
     }
 
     console.log("name: ", firstname, surname);
+
+    // Make the API call
+    try {
+      const response = await fetch('https://example.com/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ fullname: `${firstname} ${surname}` }),
+      });
+      const data = await response.json();
+      setResult(data);
+    } catch (error) {
+      console.error('Error making API call:', error);
+    }
   };
 
   return (
@@ -47,7 +64,7 @@ const FormExam = () => {
             <label className="px-2">Enter your Surname</label>
             <input
               type="text"
-              placeholder="Enter you surname"
+              placeholder="Enter your surname"
               value={surname}
               onChange={handleChange2}
               className="text-center"
@@ -63,6 +80,12 @@ const FormExam = () => {
           </div>
         </form>
       </div>
+      {result && (
+        <div className="mt-4 bg-green-100 border border-green-500 p-4 rounded-md">
+          <h3>API Response:</h3>
+          <pre>{JSON.stringify(result, null, 2)}</pre>
+        </div>
+      )}
     </div>
   );
 };

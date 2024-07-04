@@ -1,4 +1,4 @@
-// components/portfolio.jsx
+// pages/profile.js
 import { Fragment } from "react";
 import { useRouter } from "next/navigation";
 import profileData from "./profile.json";

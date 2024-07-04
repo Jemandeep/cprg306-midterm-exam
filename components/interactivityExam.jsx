@@ -3,28 +3,25 @@ import React, { useEffect, useState } from "react";
 
 const InteractivityExam = ({ list }) => {
   const [word, setWord] = useState("");
-  const [newWord, setNewWord] = useState(word);
+  const [newWord, setNewWord] = useState("");
 
   useEffect(() => {
-    setWord((prevName) => prevName.toUpperCase());
-  }, []);
+    if (word) {
+      setNewWord(word.charAt(0).toUpperCase() + word.slice(1));
+    }
+  }, [word]);
 
   const handleNameChange = (event) => {
     setWord(event.target.value);
-    getWord();
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
   };
 
-  const getWord = () => {
-    setWord(word + "t");
-  };
-
   return (
     <div>
-      {word && <div>{word}</div>}
+      {word.length > 3 && <div>{newWord}</div>}
       <div className="">
         <form onSubmit={handleSubmit} className="">
           <div className="p-2 bg-green-200">
@@ -49,8 +46,8 @@ const InteractivityExam = ({ list }) => {
       </div>
       {word === "show list" && (
         <div>
-          {list.map((item, index) => (
-            <div key={index}>{item.name}</div>
+          {list.map((item) => (
+            <div key={item.id}>{item.name}</div>
           ))}
         </div>
       )}
